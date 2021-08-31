@@ -1,18 +1,21 @@
-# ubuntu-shell
+# debug-shell
 
-Ubuntu based image, to test K8s cluster internally.
+Alpine and Ubuntu based image, to test K8s cluster internally.
 
-Included packages: command-not-found net-tools vim iputils-ping telnet dnsutils screen curl wget bash-completion
+## Included packages
+* Alpine: busybox-extras bash curl tmux openssl
+* Ubuntu: busybox curl tmux
 
 ## Usage
 
 ### Onetime run
 ```
-kubectl run shell --rm -it --image=jgkong/ubuntu-shell --restart=Never -- bash
+kubectl run shell --rm -it --image=jgkong/debug-shell --restart=Never -- bash
 ```
 
 ### Longer lifecycle shell
 ```
-kubectl run shell --image=jgkong/ubuntu-shell --restart=Never
-kubectl exec -it $(kubectl get pods -l run=shell -o jsonpath='{.items[0].metadata.name}') bash
+kubectl run shell --image=jgkong/debug-shell --restart=Never
+kubectl exec -it shell bash
+kubectl delete pod shell
 ```

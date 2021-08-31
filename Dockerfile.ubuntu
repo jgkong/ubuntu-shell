@@ -1,0 +1,21 @@
+FROM ubuntu:20.04 AS build
+
+COPY pause.c /
+
+RUN apt-get update \
+	&& apt-get install -y gcc \
+	&& gcc -o /pause /pause.c
+
+FROM ubuntu:20.04
+
+RUN apt-get update \
+	&& apt-get install -y --no-install-recommends \
+		busybox curl tmux \
+	&& busybox --install \
+	&& apt-get clean \
+	&& rm -rf /tmp/* /var/tmp/* /var/log/*.log /var/log/apt/*.log \
+	&& rm -fr /var/lib/apt/lists/*
+
+COPY --from=build /pause /
+
+CMD ["/pause"]

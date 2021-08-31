@@ -1,0 +1,15 @@
+FROM alpine AS build
+
+COPY pause.c /
+
+RUN apk add gcc musl-dev \
+	&& gcc -o /pause /pause.c
+
+FROM alpine
+
+RUN apk add busybox-extras bash curl tmux openssl \
+	&& rm -rf /var/cache/apk/*
+
+COPY --from=build /pause /
+
+CMD ["/pause"]
